@@ -161,6 +161,10 @@ export class Client {
 
   constructor(opts?: ClientOptions) {
     const options: StorageOptions = {
+      authClient: new InternalGoogleAuth({
+        projectId: opts?.projectID,
+        universeDomain: opts?.universe,
+      }) as GoogleAuth,
       projectId: opts?.projectID,
       universeDomain: opts?.universe,
       userAgent: userAgent,
@@ -258,6 +262,11 @@ export class Client {
  * TODO(sethvargo): move into actions-utils
  */
 import { cpus as oscpus } from 'os';
+import { AuthClient } from 'google-auth-library/build/src/auth/authclient';
+import { JSONClient } from 'google-auth-library/build/src/auth/googleauth';
+import { GoogleAuth } from 'google-auth-library';
+import { GaxiosOptions, GaxiosResponse } from 'gaxios';
+import AsyncLock = require('async-lock');
 
 export async function inParallel<F extends () => Promise<Awaited<R>>, R extends ReturnType<F>>(
   tasks: (() => Promise<R> | Promise<R>)[],
@@ -291,4 +300,12 @@ export async function inParallel<F extends () => Promise<Awaited<R>>, R extends 
   }
 
   return results;
+}
+
+export class InternalGoogleAuth<T extends AuthClient = JSONClient> extends GoogleAuth<T> {
+  lock = new AsyncLock();
+
+  request<T>(opts: GaxiosOptions): Promise<GaxiosResponse<T>> {
+    return this.lock.acquire('auth', async () => super.request(opts));
+  }
 }

@@ -28,10 +28,12 @@
     "@google-cloud/storage": "^7.12.0",
     "@google-github-actions/actions-utils": "^0.8.2",
     "fast-glob": "^3.3.2",
-    "ignore": "^5.3.1"
+    "ignore": "^5.3.1",
+    "async-lock": "^1.4.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.12",
+    "@types/async-lock": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^7.17.0",
     "@typescript-eslint/parser": "^7.17.0",
     "@vercel/ncc": "^0.38.1",
