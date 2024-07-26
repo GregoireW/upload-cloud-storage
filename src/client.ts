@@ -304,8 +304,18 @@ export async function inParallel<F extends () => Promise<Awaited<R>>, R extends 
 
 export class InternalGoogleAuth<T extends AuthClient = JSONClient> extends GoogleAuth<T> {
   lock = new AsyncLock();
+  hasAlreadyBeAuthenticated = false;
 
   request<T>(opts: GaxiosOptions): Promise<GaxiosResponse<T>> {
-    return this.lock.acquire('auth', async () => super.request(opts));
+    if (!this.hasAlreadyBeAuthenticated) {
+      return this.lock
+        .acquire('auth', async () => super.request(opts))
+        .then((res) => {
+          this.hasAlreadyBeAuthenticated = true;
+          return res;
+        });
+    } else {
+      return super.request(opts);
+    }
   }
 }
