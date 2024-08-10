@@ -28,6 +28,8 @@ import { errorMessage, toPlatformPath, toPosixPath } from '@google-github-action
 import { Metadata } from './headers';
 import { deepClone } from './util';
 
+import { GoogleAuth } from 'google-auth-library';
+
 // Do not listen to the linter - this can NOT be rewritten as an ES6 import statement.
 const { version: appVersion } = require('../package.json');
 
@@ -161,6 +163,10 @@ export class Client {
 
   constructor(opts?: ClientOptions) {
     const options: StorageOptions = {
+      authClient: new GoogleAuth({
+        projectId: opts?.projectID,
+        universeDomain: opts?.universe,
+      }),
       projectId: opts?.projectID,
       universeDomain: opts?.universe,
       userAgent: userAgent,
