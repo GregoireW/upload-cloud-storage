@@ -162,11 +162,15 @@ export class Client {
   readonly storage: Storage;
 
   constructor(opts?: ClientOptions) {
+    const auth = new GoogleAuth({
+      projectId: opts?.projectID,
+      universeDomain: opts?.universe,
+    });
+    auth.getClient().then((client) => {
+      console.log('The created client is: ', client);
+    });
     const options: StorageOptions = {
-      authClient: new GoogleAuth({
-        projectId: opts?.projectID,
-        universeDomain: opts?.universe,
-      }),
+      authClient: auth,
       projectId: opts?.projectID,
       universeDomain: opts?.universe,
       userAgent: userAgent,
