@@ -166,9 +166,13 @@ export class Client {
       projectId: opts?.projectID,
       universeDomain: opts?.universe,
     });
+
     auth.getClient().then((client) => {
       console.log('The created client is: ', client);
+      client.on('tokens', (token) => console.dir({ expiry_date: token.expiry_date }));
+      client.getAccessToken();
     });
+
     const options: StorageOptions = {
       authClient: auth,
       projectId: opts?.projectID,
