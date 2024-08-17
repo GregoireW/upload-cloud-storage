@@ -235,11 +235,12 @@ export class Client {
    */
   async upload(opts: ClientUploadOptions): Promise<string[]> {
     const bucket = opts.bucket;
+    /*
     await this.storage.authClient.getClient().then((client) => {
       //console.log('The created client is: ', client);
       client.on('tokens', (token) => console.dir({ expiry_date: token.expiry_date }));
       //client.getAccessToken();
-    });
+    });*/
     const storageBucket = this.storage.bucket(bucket);
 
     const tasks = opts.files.map((file) => async (): Promise<string> => {
