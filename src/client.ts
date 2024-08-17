@@ -235,12 +235,9 @@ export class Client {
    */
   async upload(opts: ClientUploadOptions): Promise<string[]> {
     const bucket = opts.bucket;
-
-    this.storage.authClient.getClient().then((client) => {
-      //console.log('The created client is: ', client);
-      client.on('tokens', (token) => console.dir({ expiry_date: token.expiry_date }));
-      //client.getAccessToken();
-    });
+    // Force the client to be initialized before we start uploading files.
+    // It prevents multiple clients from being created in parallel.
+    await this.storage.authClient.getClient();
     const storageBucket = this.storage.bucket(bucket);
 
     const tasks = opts.files.map((file) => async (): Promise<string> => {
