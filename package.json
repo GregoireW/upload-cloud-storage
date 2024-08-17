@@ -4,7 +4,7 @@
   "description": "Upload to Google Cloud Storage (GCS)",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build -m src/main.ts",
+    "build": "ncc build -s -m src/main.ts",
     "docs": "./node_modules/.bin/actions-gen-readme",
     "lint": "eslint .",
     "format": "eslint . --fix",
